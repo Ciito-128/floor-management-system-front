@@ -1,6 +1,6 @@
 import TabsView from '@/layouts/tabs/TabsView'
 import BlankView from '@/layouts/BlankView'
-import PageView from '@/layouts/PageView'
+// import PageView from '@/layouts/PageView'
 
 // 路由配置
 const options = {
@@ -13,12 +13,12 @@ const options = {
     {
       path: '*',
       name: '404',
-      component: () => import('@/pages/exception/404'),
+      component: () => import('@/pages/exception/404')
     },
     {
       path: '/403',
       name: '403',
-      component: () => import('@/pages/exception/403'),
+      component: () => import('@/pages/exception/403')
     },
     {
       path: '/',
@@ -26,7 +26,7 @@ const options = {
       component: TabsView,
       redirect: '/login',
       children: [
-        {
+       /*  {
           path: 'dashboard',
           name: 'Dashboard',
           meta: {
@@ -42,56 +42,34 @@ const options = {
                   closable: false
                 }
               },
-              component: () => import('@/pages/dashboard/workplace'),
-            },
-            {
+              component: () => import('@/pages/dashboard/workplace')
+            }
+                     {
               path: 'analysis',
               name: '分析页',
               component: () => import('@/pages/dashboard/analysis'),
             }
           ]
-        },
+        }, */
         {
           // 办公室管理
           path: 'administration-office',
-          name: '办公室',
+          name: '办公室管理',
           meta: {
             icon: 'cluster'
           },
-          component: BlankView,
-          children: [
-            {
-              path: 'AdministrationOffice',
-              name: '办公室管理',
-              meta: {
-                page: {
-                  closable: false
-                }
-              },
-              component: () => import('@/pages/administration-office/AdministrationOffice'),
-            },
-          ]
+          component: () =>
+            import('@/pages/administration-office/AdministrationOffice')
         },
         //工位管理
         {
           path: 'station-management',
-          name: '工位',
+          name: '工位管理',
           meta: {
             icon: 'solution'
           },
-          component: BlankView,
-          children: [
-            {
-              path: 'StationManagement',
-              name: '工位管理',
-              meta: {
-                page: {
-                  closable: false
-                }
-              },
-              component: () => import('@/pages/station-management/StationManagement'),
-            },
-          ]
+          component: () =>
+            import('@/pages/station-management/StationManagement')
         },
         // 系统管理
         {
@@ -110,7 +88,7 @@ const options = {
                   closable: false
                 }
               },
-              component: () => import('@/pages/system/roles/RoleManagement'),
+              component: () => import('@/pages/system/roles/RoleManagement')
             },
             {
               path: 'UserManagement',
@@ -120,17 +98,7 @@ const options = {
                   closable: false
                 }
               },
-              component: () => import('@/pages/system/users/UserManagement'),
-            },
-            {
-              path: 'MenuManagement',
-              name: '菜单管理',
-              meta: {
-                page: {
-                  closable: false
-                }
-              },
-              component: () => import('@/pages/system/menus/MenuManagement'),
+              component: () => import('@/pages/system/users/UserManagement')
             },
             {
               path: 'LogManagement',
@@ -140,11 +108,11 @@ const options = {
                   closable: false
                 }
               },
-              component: () => import('@/pages/system/logs/LogManagement'),
-            },
+              component: () => import('@/pages/system/logs/LogManagement')
+            }
           ]
-        },
-        {
+        }
+        /* {
           path: 'form',
           name: '表单页',
           meta: {
@@ -369,9 +337,9 @@ const options = {
             icon: 'file-word',
             link: 'https://iczer.gitee.io/vue-antd-admin-docs/'
           }
-        }
+        } */
       ]
-    },
+    }
   ]
 }
 

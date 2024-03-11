@@ -91,9 +91,9 @@ export default {
     },
     search() {},
     reset() {},
-    add() {},
-    editRecord(record) {},
-    deleteRecord(id) {}
+    add() {}
+    // editRecord(record) {},
+    // deleteRecord(id) {}
   }
 }
 </script>

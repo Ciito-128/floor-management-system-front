@@ -118,6 +118,7 @@ export default {
         {
           title: '操作',
           width: 220,
+          fixed: 'right',
           dataIndex: 'stationAction',
           scopedSlots: { customRender: 'stationAction' }
         }
@@ -140,9 +141,9 @@ export default {
     },
     search() {},
     reset() {},
-    add() {},
-    editRecord(record) {},
-    deleteRecord(id) {}
+    add() {}
+    // editRecord(record) {},
+    // deleteRecord(id) {}
   }
 }
 </script>
