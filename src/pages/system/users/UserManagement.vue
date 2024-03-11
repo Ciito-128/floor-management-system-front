@@ -2,8 +2,8 @@
   <a-card>
     <!-- 搜索 -->
     <a-form :form="form" layout="inline" style="margin-bottom: 8px">
-      <a-form-item label="角色名称">
-        <a-input v-model="form.roleName" />
+      <a-form-item label="姓名">
+        <a-input v-model="form.userName" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="search" style="margin-right: 8px">
@@ -25,24 +25,34 @@
       :loading="loading"
     >
       <template slot="floorAction" slot-scope="text, record">
-        <a @click="editRecord(record)"> <a-icon type="edit" />编辑 </a>
+        <a @click="editRecord(record, 'edit')"> <a-icon type="edit" />编辑 </a>
         <a-divider type="vertical" />
-        <a @click="deleteRecord(record.id)"> <a-icon type="delete" />删除 </a>
+        <a-popconfirm
+          title="确定删除吗?"
+          @confirm="() => deleteRecord(record.userId)"
+        >
+          <a> <a-icon type="delete" />删除</a>
+        </a-popconfirm>
       </template>
     </a-table>
+    <UserManagementModal ref="UserManagementModalRef" @ok="setData" />
   </a-card>
 </template>
 
 <script>
+import _ from 'lodash'
 import { usersList } from '@/mock/users'
+import UserManagementModal from './UserManagementModal.vue'
+import dayjs from 'dayjs'
 export default {
   name: 'UserManagement',
+  components: { UserManagementModal },
   data() {
     return {
       loading: false,
       dataSource: [],
       form: {
-        roleName: ''
+        userName: ''
       },
       columns: [
         {
@@ -78,7 +88,8 @@ export default {
           dataIndex: 'floorAction',
           scopedSlots: { customRender: 'floorAction' }
         }
-      ]
+      ],
+      loadshData: {}
     }
   },
   computed: {},
@@ -87,18 +98,68 @@ export default {
     this.getData()
   },
   methods: {
+    setData(record) {
+      if (!record.userId) {
+        this.dataSource.push({
+          ...record,
+          index: this.dataSource.length + 1,
+          userId: Math.random().toString(36).substr(2),
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
+        })
+      } else {
+        this.dataSource = this.dataSource.map((item) => {
+          if (item.userId === record.userId) {
+            return record
+          }
+          return item
+        })
+        this.loadshData = _.cloneDeep(this.dataSource)
+      }
+    },
     getData() {
       this.loading = true
       this.dataSource = usersList.flatMap((office) => office.usersList)
+      this.loadshData = _.cloneDeep(this.dataSource)
       setTimeout(() => {
         this.loading = false
       }, 1000)
     },
-    search() {},
-    reset() {},
-    add() {}
-    // editRecord(record) {},
-    // deleteRecord(id) {}
+    search() {
+      this.loading = true
+      this.dataSource = this.loadshData.filter((item) => {
+        return !this.form.userName || item.userName.includes(this.form.userName)
+      })
+      setTimeout(() => {
+        clearTimeout()
+        this.loading = false
+      }, 300)
+    },
+    reset() {
+      this.loading = true
+      this.form = {
+        userName: ''
+      }
+      this.dataSource = _.cloneDeep(this.loadshData)
+      setTimeout(() => {
+        clearTimeout()
+        this.loading = false
+      }, 300)
+    },
+    add() {
+      this.$refs.UserManagementModalRef.openModal({}, 'add')
+    },
+    editRecord(record, type) {
+      this.$refs.UserManagementModalRef.openModal(record, type)
+    },
+    deleteRecord(userId) {
+      this.loading = true
+      this.dataSource = this.dataSource.filter((item) => item.userId !== userId)
+      setTimeout(() => {
+        clearTimeout()
+        this.loading = false
+      }, 300)
+    }
   }
 }
 </script>

@@ -144,14 +144,16 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$emit('ok', this.model)
+          setTimeout(() => {
+            this.confirmLoading = false
+            this.visible = false
+          }, 500)
         } else {
-          this.confirmLoading = false
+          setTimeout(() => {
+            this.confirmLoading = false
+          }, 500)
         }
       })
-      setTimeout(() => {
-        this.confirmLoading = false
-        this.visible = false
-      }, 1000)
     },
     handleCancel() {
       this.visible = false

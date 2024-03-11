@@ -145,7 +145,6 @@ export default {
       }, 500)
     },
     search() {
-      console.log(this.form)
       this.loading = true
       this.dataSource = this.loadshData.filter((item) => {
         return (

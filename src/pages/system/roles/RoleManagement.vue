@@ -20,18 +20,28 @@
     </a-form>
     <a-table :columns="columns" :data-source="dataSource" :loading="loading">
       <template slot="floorAction" slot-scope="text, record">
-        <a @click="editRecord(record)"> <a-icon type="edit" />编辑 </a>
+        <a @click="editRecord(record, 'edit')"> <a-icon type="edit" />编辑 </a>
         <a-divider type="vertical" />
-        <a @click="deleteRecord(record.id)"> <a-icon type="delete" />删除 </a>
+        <a-popconfirm
+          title="确定删除吗?"
+          @confirm="() => deleteRecord(record.roleId)"
+        >
+          <a> <a-icon type="delete" />删除</a>
+        </a-popconfirm>
       </template>
     </a-table>
+    <RoleManagementModal ref="RoleManagementModalRef" @ok="setData" />
   </a-card>
 </template>
 
 <script>
+import _ from 'lodash'
 import { rolesList } from '@/mock/role'
+import RoleManagementModal from './RoleManagementModal.vue'
+import dayjs from 'dayjs'
 export default {
   name: 'RoleManagement',
+  components: { RoleManagementModal },
   data() {
     return {
       loading: false,
@@ -68,7 +78,8 @@ export default {
           dataIndex: 'floorAction',
           scopedSlots: { customRender: 'floorAction' }
         }
-      ]
+      ],
+      loadshData: {}
     }
   },
   computed: {},
@@ -77,6 +88,25 @@ export default {
     this.getData()
   },
   methods: {
+    setData(record) {
+      if (!record.roleId) {
+        this.dataSource.push({
+          ...record,
+          index: this.dataSource.length + 1,
+          roleId: Math.random().toString(36).substr(2),
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
+        })
+      } else {
+        this.dataSource = this.dataSource.map((item) => {
+          if (item.roleId === record.roleId) {
+            return record
+          }
+          return item
+        })
+        this.loadshData = _.cloneDeep(this.dataSource)
+      }
+    },
     getData() {
       this.loading = true
       this.dataSource = rolesList.map((item, index) => {
@@ -85,15 +115,46 @@ export default {
           ...item
         }
       })
+      this.loadshData = _.cloneDeep(this.dataSource)
       setTimeout(() => {
         this.loading = false
       }, 1000)
     },
-    search() {},
-    reset() {},
-    add() {}
-    // editRecord(record) {},
-    // deleteRecord(id) {}
+    search() {
+      this.loading = true
+      this.dataSource = this.loadshData.filter((item) => {
+        return !this.form.roleName || item.roleName.includes(this.form.roleName)
+      })
+      setTimeout(() => {
+        clearTimeout()
+        this.loading = false
+      }, 300)
+    },
+    reset() {
+      this.loading = true
+      this.form = {
+        roleName: ''
+      }
+      this.dataSource = _.cloneDeep(this.loadshData)
+      setTimeout(() => {
+        clearTimeout()
+        this.loading = false
+      }, 300)
+    },
+    add() {
+      this.$refs.RoleManagementModalRef.openModal({}, 'add')
+    },
+    editRecord(record, type) {
+      this.$refs.RoleManagementModalRef.openModal(record, type)
+    },
+    deleteRecord(roleId) {
+      this.loading = true
+      this.dataSource = this.dataSource.filter((item) => item.roleId !== roleId)
+      setTimeout(() => {
+        clearTimeout()
+        this.loading = false
+      }, 300)
+    }
   }
 }
 </script>
