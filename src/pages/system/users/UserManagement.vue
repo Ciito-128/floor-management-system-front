@@ -24,12 +24,16 @@
       :data-source="dataSource"
       :loading="loading"
     >
-      <template slot="floorAction" slot-scope="text, record">
+      <template slot="floorAction" slot-scope="text, record, index">
         <a @click="editRecord(record, 'edit')"> <a-icon type="edit" />编辑 </a>
         <a-divider type="vertical" />
         <a-popconfirm
           title="确定删除吗?"
           @confirm="() => deleteRecord(record.userId)"
+          v-if="
+            !roles[0].id.includes('floorAdminB1') ||
+            (roles[0].id.includes('floorAdminB1') && index != 0)
+          "
         >
           <a> <a-icon type="delete" />删除</a>
         </a-popconfirm>
@@ -43,6 +47,7 @@
 import _ from 'lodash'
 import { usersList } from '@/mock/users'
 import UserManagementModal from './UserManagementModal.vue'
+import { mapGetters } from 'vuex'
 import dayjs from 'dayjs'
 export default {
   name: 'UserManagement',
@@ -92,7 +97,9 @@ export default {
       loadshData: {}
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('account', ['user', 'roles'])
+  },
   watch: {},
   mounted() {
     this.getData()
@@ -118,8 +125,14 @@ export default {
       }
     },
     getData() {
+      const { id } = this.roles[0]
       this.loading = true
       this.dataSource = usersList.flatMap((office) => office.usersList)
+      if (id.includes('floorAdminB1')) {
+        this.dataSource = this.dataSource.filter((item) => {
+          return item.floorName === '1楼'
+        })
+      }
       this.loadshData = _.cloneDeep(this.dataSource)
       setTimeout(() => {
         this.loading = false

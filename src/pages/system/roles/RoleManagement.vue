@@ -38,6 +38,7 @@
 import _ from 'lodash'
 import { rolesList } from '@/mock/role'
 import RoleManagementModal from './RoleManagementModal.vue'
+import { mapGetters } from 'vuex'
 import dayjs from 'dayjs'
 export default {
   name: 'RoleManagement',
@@ -82,7 +83,9 @@ export default {
       loadshData: {}
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('account', ['user', 'roles'])
+  },
   watch: {},
   mounted() {
     this.getData()
@@ -108,6 +111,7 @@ export default {
       }
     },
     getData() {
+      const { id } = this.roles[0]
       this.loading = true
       this.dataSource = rolesList.map((item, index) => {
         return {
@@ -115,6 +119,11 @@ export default {
           ...item
         }
       })
+      if (id.includes('floorAdminB1')) {
+        this.dataSource = this.dataSource.filter((item) => {
+          return item.roleId === id
+        })
+      }
       this.loadshData = _.cloneDeep(this.dataSource)
       setTimeout(() => {
         this.loading = false

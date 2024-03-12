@@ -2,6 +2,8 @@ import TabsView from '@/layouts/tabs/TabsView'
 import BlankView from '@/layouts/BlankView'
 // import PageView from '@/layouts/PageView'
 
+import store from "@/store";
+const isfloorAdmin = store.getters['account/roles'].length? store.getters['account/roles'][0].id.includes('floorAdmin') : false; // 是否是楼层管理员
 // 路由配置
 const options = {
   routes: [
@@ -88,7 +90,7 @@ const options = {
                   closable: false
                 }
               },
-              component: () => import('@/pages/system/roles/RoleManagement')
+              component: () => import(`@/pages/system/roles/${isfloorAdmin ? 'RoleNULL' : 'RoleManagement'}`)
             },
             {
               path: 'UserManagement',
@@ -108,7 +110,7 @@ const options = {
                   closable: false
                 }
               },
-              component: () => import('@/pages/system/logs/LogManagement')
+              component: () => import(`@/pages/system/logs/${isfloorAdmin ? 'LogsNULL' : 'LogManagement'}`)
             }
           ]
         }

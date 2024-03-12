@@ -1,6 +1,6 @@
  const rolesList = [
     {
-        roleId: 'adminA', // 角色ID
+        roleId: 'admin', // 角色ID
         roleType: 'admin', // 角色类型(系统管理员、楼层管理员、员工employee)
         roleName: '系统管理员A', // 角色名称
         roleDescription: '能方便直观的查看每个办公室的使用示意图，管理所有办公室和工位和系统管理。', // 角色描述

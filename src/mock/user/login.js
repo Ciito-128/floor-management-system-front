@@ -17,10 +17,10 @@ Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
     success = true
     result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]
     result.data.roles = [{id: 'admin', operation: ['add', 'edit', 'delete']}]
-  } else if (name === 'test' || password === '888888') {
+  } else if (name === 'floorAdminB1' || password === '888888') {
     success = true
     result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]
-    result.data.roles = [{id: 'test', operation: ['add', 'edit', 'delete']}]
+    result.data.roles = [{id: 'floorAdminB1', operation: ['add', 'edit', 'delete']}]
   } else {
     success = false
   }
@@ -33,7 +33,7 @@ Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
     result.data.expireAt = new Date(new Date().getTime() + 30 * 60 * 1000)
   } else {
     result.code = -1
-    result.message = '账户名或密码错误（admin/888888 or test/888888）'
+    result.message = '账户名或密码错误（admin/888888 or floorAdminB1/888888）'
   }
   return result
 })

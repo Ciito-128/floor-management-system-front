@@ -53,6 +53,7 @@
 <script>
 import { officesList } from '@/mock/office'
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import AdministrationOfficeModal from './AdministrationOfficeModal.vue'
 export default {
   name: 'AdministrationOffice',
@@ -107,7 +108,9 @@ export default {
       loadshData: []
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('account', ['user', 'roles'])
+  },
   watch: {},
   mounted() {
     this.getData()
@@ -131,6 +134,7 @@ export default {
       }
     },
     getData() {
+      const { id } = this.roles[0]
       this.loading = true
       this.dataSource = officesList.map((item, index) => {
         return {
@@ -138,6 +142,11 @@ export default {
           index: index + 1
         }
       })
+      if (id.includes('floorAdminB1')) {
+        this.dataSource = this.dataSource.filter((item) => {
+          return item.floorName === '1楼'
+        })
+      }
       this.loadshData = _.cloneDeep(this.dataSource)
       setTimeout(() => {
         clearTimeout()

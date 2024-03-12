@@ -86,6 +86,7 @@
 
 <script>
 import { officesList } from '@/mock/office'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'StationManagementModal',
@@ -110,11 +111,12 @@ export default {
           { required: true, message: '请选择工位使用状态', trigger: 'change' }
         ]
       },
-      officesList: officesList.filter((item) => item.usageStatus),
+      officesList: [],
       actionType: 'add'
     }
   },
   computed: {
+    ...mapGetters('account', ['user', 'roles']),
     isView() {
       return this.actionType === 'view'
     }
@@ -126,6 +128,13 @@ export default {
       this.model = record
       this.Title = type === 'add' ? '新增' : type === 'view' ? '详情' : '编辑'
       this.actionType = type
+      const { id } = this.roles[0]
+      this.officesList = officesList.filter((item) => item.usageStatus)
+      if (id.includes('floorAdminB1')) {
+        this.officesList = this.officesList.filter((item) => {
+          return item.floorName === '1楼'
+        })
+      }
       this.visible = true
     },
     handleOk() {

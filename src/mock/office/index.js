@@ -164,4 +164,5 @@ function generateWorkstations(office) {
 // 为每个办公室生成工位列表
 officesList.forEach(office => {
   office.workstations = generateWorkstations(office)
+  office.imgUrl = `https://picsum.photos/200/300?random=${Math.random()}`
 })

@@ -65,6 +65,7 @@
 import { officesList } from '@/mock/office'
 import StationManagementModal from './StationManagementModal.vue'
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 export default {
   name: 'StationManagement',
   components: { StationManagementModal },
@@ -134,14 +135,15 @@ export default {
       loadshData: []
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('account', ['user', 'roles'])
+  },
   watch: {},
   mounted() {
     this.getData()
   },
   methods: {
     setData(record, actionType) {
-      console.log('🚀 ~ setData ~ record:', record)
       if (actionType === 'add') {
         this.dataSource.push({
           ...record,
@@ -159,8 +161,14 @@ export default {
       }
     },
     getData() {
+      const { id } = this.roles[0]
       this.loading = true
       this.dataSource = officesList.flatMap((office) => office.workstations)
+      if (id.includes('floorAdminB1')) {
+        this.dataSource = this.dataSource.filter((item) => {
+          return item.floorName === '1楼'
+        })
+      }
       this.loadshData = _.cloneDeep(this.dataSource)
       setTimeout(() => {
         clearTimeout()

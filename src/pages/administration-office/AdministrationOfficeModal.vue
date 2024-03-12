@@ -86,6 +86,26 @@
             />
           </a-form-model-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="办公室示意图" prop="imgUrl">
+            <img
+              v-if="model.imgUrl"
+              class="img"
+              @click="showImg(model.imgUrl)"
+              :src="model.imgUrl"
+              alt=""
+            />
+            <a-upload
+              v-else
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              list-type="picture"
+              :default-file-list="fileList"
+              class="upload-list-inline"
+            >
+              <a-button> <a-icon type="upload" /> 上传 </a-button>
+            </a-upload>
+          </a-form-model-item>
+        </a-col>
       </a-row>
     </a-form-model>
   </a-modal>
@@ -118,7 +138,8 @@ export default {
           { required: true, message: '请输入楼层管理员电话', trigger: 'blur' }
         ]
       },
-      actionType: 'add'
+      actionType: 'add',
+      fileList: []
     }
   },
   computed: {
@@ -163,4 +184,8 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.img {
+  max-width: 400px;
+  max-height: 300px;
+}
 </style>
